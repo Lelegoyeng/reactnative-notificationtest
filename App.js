@@ -1,11 +1,12 @@
 import PushNotification from 'react-native-push-notification';
-import { useEffect } from 'react';
-import { View, Text, Platform, ToastAndroid } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import usePushNotification from './src/hooks/usePushNotification';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 
 const App = () => {
+  const [accountInformation, setAccountInformation] = useState(null);
   const sendFcmToken = async () => {
     try {
       await messaging().registerDeviceForRemoteMessages();
@@ -18,8 +19,24 @@ const App = () => {
     }
   };
 
+  const getAccountInformation = async () => {
+    try {
+      await axios.get('http://192.168.0.44:3000/account').then(function (response) {
+        setAccountInformation(response.data.result)
+      }).catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+    } catch (err) {
+      //Do nothing
+      console.log(err.response.data);
+      return;
+    }
+  };
+
   useEffect(() => {
     sendFcmToken();
+    getAccountInformation();
   }, []);
 
   const {
@@ -55,38 +72,37 @@ const App = () => {
     listenToNotifications();
   }, []);
 
-  useEffect(() => {
-    // Handler untuk menangani notifikasi saat aplikasi dalam keadaan terbuka
-    const handleForegroundNotification = async (remoteMessage) => {
-      PushNotification.createChannel(
-        {
-          channelId: remoteMessage.messageId, // (required)
-          channelName: "Special message", // (required)
-          channelDescription: "Notification for special message", // (optional) default: undefined.
-          importance: 4, // (optional) default: 4. Int value of the Android notification importance
-          vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-        },
-        (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-      );
-      PushNotification.localNotification({
-        channelId: remoteMessage.messageId,
-        title: remoteMessage.data.title,
-        message: remoteMessage.data.body
-      })
-    };
-
-    const unsubscribeForeground = messaging().onMessage(handleForegroundNotification);
-
-    return () => {
-      unsubscribeForeground();
-    };
-  }, []);
-
   return (
-    <View>
-      <Text>Push Notification APP</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Push Notification APP</Text>
+      <View style={styles.balanceContainer}>
+        <Text style={styles.balanceText}>Balance</Text>
+        <Text style={styles.balanceAmount}>$ {accountInformation?.balance || 0}</Text>
+      </View>
     </View>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  balanceContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  balanceText: {
+    fontSize: 18,
+  },
+  balanceAmount: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});
 
 export default App;
