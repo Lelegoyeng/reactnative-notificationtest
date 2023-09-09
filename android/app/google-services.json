@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "481113359593",
+    "project_id": "lelegoyeng-9c1fe",
+    "storage_bucket": "lelegoyeng-9c1fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481113359593:android:28a1cffc09d739d4c79c78",
+        "android_client_info": {
+          "package_name": "com.pushnotificationstest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481113359593-np9qahqrm4nl6ukqn998klkuvdt8ghb1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7cPBZ4C697fOa_bckITgb3l2kAgyZMXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "481113359593-np9qahqrm4nl6ukqn998klkuvdt8ghb1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
